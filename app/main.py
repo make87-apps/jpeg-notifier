@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from io import BytesIO
 
 import requests
 from make87 import get_topic, topic_names
@@ -16,8 +15,6 @@ def send_notification_with_image(image_data: bytes):
     if current_time < last_sent_time + timedelta(seconds=cooldown):
         print("Cooldown in effect, skipping notification.")
         return
-
-    buffer = BytesIO(image_data)
 
     # Send the notification
     response = requests.post(
