@@ -1,7 +1,6 @@
 build_kit:
   name: python3
   version: latest
-topics:
+inbound_topics:
   - name: IMAGE_DATA
     message_type: make87.image.ImageJPEG.ImageJPEG
-    type: SUB
