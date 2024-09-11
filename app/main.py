@@ -1,7 +1,8 @@
+import logging
 from datetime import datetime, timedelta
 
 import requests
-from make87 import get_topic, topic_names
+from make87 import get_topic, topic_names, MessageMetadata
 from make87_messages.image.ImageJPEG_pb2 import ImageJPEG
 
 cooldown = 30  # seconds
@@ -13,7 +14,7 @@ def send_notification_with_image(image_data: bytes):
     current_time = datetime.now()
 
     if current_time < last_sent_time + timedelta(seconds=cooldown):
-        print("Cooldown in effect, skipping notification.")
+        logging.info("Cooldown in effect, skipping notification.")
         return
 
     # Send the notification
@@ -28,16 +29,16 @@ def send_notification_with_image(image_data: bytes):
     )
 
     if response.ok:
-        print("Notification sent successfully.")
+        logging.info("Notification sent successfully.")
         last_sent_time = current_time
     else:
-        print(f"Failed to send notification: {response.reason}")
+        logging.error(f"Failed to send notification: {response.reason}")
 
 
 def main():
     topic = get_topic(name=topic_names.IMAGE_DATA)
 
-    def callback(message: ImageJPEG):
+    def callback(message: ImageJPEG, metadata: MessageMetadata):
         image_data = message.data
         send_notification_with_image(image_data)
 
