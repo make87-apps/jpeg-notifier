@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import requests
 from make87 import get_topic, topic_names, MessageMetadata
-from make87_messages.image.ImageJPEG_pb2 import ImageJPEG
+from make87_messages.image.compressed.image_jpeg_pb2 import ImageJPEG
 
 cooldown = 30  # seconds
 last_sent_time = datetime.min
