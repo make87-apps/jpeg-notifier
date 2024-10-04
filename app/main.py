@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timedelta
 
 import requests
-from make87 import get_topic, topic_names, MessageMetadata
+from make87 import get_topic, topic_names, MessageMetadata, initialize
 from make87_messages.image.compressed.image_jpeg_pb2 import ImageJPEG
 
 cooldown = 30  # seconds
@@ -36,6 +36,7 @@ def send_notification_with_image(image_data: bytes):
 
 
 def main():
+    initialize()
     topic = get_topic(name=topic_names.IMAGE_DATA)
 
     def callback(message: ImageJPEG, metadata: MessageMetadata):
