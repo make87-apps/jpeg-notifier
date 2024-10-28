@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timedelta
 
 import requests
-from make87 import get_topic, topic_names, MessageMetadata, initialize
+from make87 import initialize, get_subscriber_topic, resolve_topic_name
 from make87_messages.image.compressed.image_jpeg_pb2 import ImageJPEG
 
 cooldown = 30  # seconds
@@ -20,7 +20,7 @@ def send_notification_with_image(image_data: bytes):
     # Send the notification
     response = requests.post(
         "https://ntfy.sh/make87",
-        data=image_data,  # "image_data".encode("utf-8"),  # Message body
+        data=image_data,  # Message body
         headers={
             "Title": "New Image Notification",
             "Tags": "skull",
@@ -37,9 +37,10 @@ def send_notification_with_image(image_data: bytes):
 
 def main():
     initialize()
-    topic = get_topic(name=topic_names.IMAGE_DATA)
+    topic_name = resolve_topic_name(name="IMAGE_DATA")
+    topic = get_subscriber_topic(name=topic_name, message_type=ImageJPEG)
 
-    def callback(message: ImageJPEG, metadata: MessageMetadata):
+    def callback(message: ImageJPEG):
         image_data = message.data
         send_notification_with_image(image_data)
 
